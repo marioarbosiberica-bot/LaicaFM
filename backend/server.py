@@ -280,9 +280,11 @@ async def send_chat_message(username: str, message: str):
     await db.chat_messages.insert_one(chat_msg.dict())
     
     # Broadcast to all connections
+    chat_dict = chat_msg.dict()
+    chat_dict['timestamp'] = chat_dict['timestamp'].isoformat()
     await manager.broadcast({
         "type": "chat_message",
-        "message": chat_msg.dict()
+        "message": chat_dict
     })
     
     return chat_msg
